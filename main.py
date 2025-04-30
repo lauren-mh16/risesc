@@ -1,36 +1,24 @@
 import pandas as pd
-import plotly.express as px
 import streamlit as st
+from plots import pm25_day_plot, pm25_month_plot
 
-st.title("testing app")
+
+st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
+
+st.title("Hallo")
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv('clarity.csv')
+    df = pd.read_csv('data/clarity.csv')
     return df
 
 df = load_data()
 
-graph = df.groupby(["Name", "day"]).agg({
-    "pm_conc": ["mean", "median", "std"],
-    "asthma_rate": "first",
-    "month_cat": "first",
-    "Longitude": "first"
-}).reset_index()
+#fig_day = pm25_day_plot(df)
+fig_month = pm25_month_plot(df)
 
-graph.columns = ['_'.join(col).strip('_') for col in graph.columns.values]
 
-fig = px.scatter(
-    graph,
-    x='pm_conc_mean',
-    y='pm_conc_std',
-    color='day',
-    title="PM2.5 Mean vs. Standard Deviation by Day",
-    labels={
-        'pm_conc_mean': 'Average PM2.5 Concentration',
-        'pm_conc_std': 'Standard Deviation of PM2.5 Concentration',
-        'day': 'Day of Measurement'
-    }
-)
 
-st.plotly_chart(fig)
+#st.plotly_chart(fig_day)
+
+st.plotly_chart(fig_month)
