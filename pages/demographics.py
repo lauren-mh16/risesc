@@ -27,7 +27,7 @@ df_graph = df.groupby(["Name"]).agg({
 
 
 fig = px.scatter(
-    df_graph, x = selected_var, y = 'asthma_rate'
+    df_graph, x = selected_var, y = 'asthma_rate', size = 'pm_conc'
 )
 fig.update_traces(marker=dict(size=20, opacity=0.6))
 
