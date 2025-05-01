@@ -24,6 +24,11 @@ def pm25_day_plot(df):
             'pm_conc_mean': 'Average PM2.5 Concentration',
             'pm_conc_std': 'Standard Deviation of PM2.5 Concentration',
             'day': 'Day of Measurement'
+        },
+        hover_name="Name",
+        hover_data={
+            "pm_conc_mean": ":.2f",
+            "pm_conc_std": ":.2f"
         }
     )
     return fig
