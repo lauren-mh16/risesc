@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from plots import pm25_day_plot, pm25_month_plot, create_map
+from old.plots import pm25_month_plot, create_map
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")

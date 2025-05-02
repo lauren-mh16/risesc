@@ -2,35 +2,6 @@ import plotly.express as px
 import pandas as pd
 import folium
 
-# Plot: PM2.5 by Day
-def pm25_day_plot(df):
-    graph = df.groupby(["Name", "day"]).agg({
-        "pm_conc": ["mean", "median", "std"],
-        "asthma_rate": "first",
-        "month_cat": "first",
-        "Longitude": "first"
-    }).reset_index()
-
-    graph.columns = ['_'.join(col).strip('_') for col in graph.columns.values]
-
-    fig = px.scatter(
-        graph,
-        x='pm_conc_mean',
-        y='pm_conc_std',
-        color='day',
-        title="PM2.5 Mean vs. Standard Deviation by Day",
-        labels={
-            'pm_conc_mean': 'Average PM2.5 Concentration',
-            'pm_conc_std': 'Standard Deviation of PM2.5 Concentration',
-            'day': 'Day of Measurement'
-        },
-        hover_name="Name",
-        hover_data={
-            "pm_conc_mean": ":.2f",
-            "pm_conc_std": ":.2f"
-        }
-    )
-    return fig
 
 # Plot: PM2.5 by Month
 def pm25_month_plot(df):
