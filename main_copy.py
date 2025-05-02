@@ -12,7 +12,7 @@ def load_data(url):
 
 # Load your datasets
 df = load_data('data/clarity.csv')
-df_merged = load_data('data/clarity_asthma_merged.csv.csv')
+df_merged = load_data('data/clarity_asthma_merged.csv')
 
 # Build plots
 fig_month = pm25_month_plot(df)
