@@ -2,6 +2,9 @@
 
 import plotly.express as px
 import pandas as pd
+import folium
+from streamlit_folium import st_folium
+import streamlit as st
 
 def pm25_day_plot(df):
 
@@ -51,15 +54,13 @@ def pm25_month_plot(df):
     return fig
 
 ## asthma and PM2.5 mapping
-import pandas as pd
-import folium
-from streamlit_folium import st_folium
-import streamlit as st
+
+
 
 ## READ FILES -- update!
-def load_data():
-  df_merged = pd.read_csv('data/pm25_asthma_clean.csv')
-  return df_merged
+# def load_data():
+#   df_merged = pd.read_csv('data/pm25_asthma_clean.csv')
+#   return df_merged
 
 # Define functions
 def pm25_2025_color(pm25_2025):
