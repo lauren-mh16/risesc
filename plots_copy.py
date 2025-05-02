@@ -1,13 +1,9 @@
-## creating plots
-
 import plotly.express as px
 import pandas as pd
 import folium
-from streamlit_folium import st_folium
-import streamlit as st
 
+# Plot: PM2.5 by Day
 def pm25_day_plot(df):
-
     graph = df.groupby(["Name", "day"]).agg({
         "pm_conc": ["mean", "median", "std"],
         "asthma_rate": "first",
@@ -36,6 +32,7 @@ def pm25_day_plot(df):
     )
     return fig
 
+# Plot: PM2.5 by Month
 def pm25_month_plot(df):
     df['month_cat'] = pd.Categorical(
         df["month"],
@@ -53,16 +50,7 @@ def pm25_month_plot(df):
     fig = px.scatter(graph, x='pm_conc_mean', y='asthma_rate_first', color='month_cat', size='pm_conc_std')
     return fig
 
-## asthma and PM2.5 mapping
-
-
-
-## READ FILES -- update!
-# def load_data():
-#   df_merged = pd.read_csv('data/pm25_asthma_clean.csv')
-#   return df_merged
-
-# Define functions
+# Helper: Color function for PM2.5
 def pm25_2025_color(pm25_2025):
     if pm25_2025 < 6:
         return 'green'
@@ -71,6 +59,7 @@ def pm25_2025_color(pm25_2025):
     else:
         return 'red'
 
+# Helper: Icon type based on site name
 def site_type_icon(name):
     name_lower = name.lower()
     if 'school' in name_lower:
@@ -78,12 +67,13 @@ def site_type_icon(name):
     elif 'home' in name_lower:
         return 'home'
     elif 'park' in name_lower or 'playlot' in name_lower:
-        return 'leaf'
+        return 'leaf'  # 🍃 using leaf icon
     elif 'office' in name_lower:
         return 'building'
     else:
         return 'map-marker'
 
+# Create Folium map
 def create_map(df):
     center_lat = df['Latitude'].mean()
     center_lon = df['Longitude'].mean()
@@ -121,7 +111,7 @@ def create_map(df):
     <b>Site Type Icons:</b><br>
     <span style="font-size:18px;">🎓</span> School<br>
     <span style="font-size:18px;">🏠</span> Home<br>
-    <span style="font-size:18px;">🌳</span> Park / Playlot<br>
+    <span style="font-size:18px;">🍃</span> Park / Playlot<br>
     <span style="font-size:18px;">🏢</span> Office<br>
     <span style="font-size:18px;">📍</span> Other
     </div>
