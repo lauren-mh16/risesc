@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
-from plots import pm25_day_plot, pm25_month_plot
+from plots import pm25_day_plot, pm25_month_plot, create_map
+from streamlit_folium import st_folium 
 
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
@@ -17,11 +18,11 @@ df = load_data()
 #fig_day = pm25_day_plot(df)
 fig_month = pm25_month_plot(df)
 
-
-
 #st.plotly_chart(fig_day)
 
 st.plotly_chart(fig_month)
+
+
 
 # def main():
 st.title("PM2.5 and Asthma Rate Map (2025 Focus)")
