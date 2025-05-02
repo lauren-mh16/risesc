@@ -23,12 +23,12 @@ fig_month = pm25_month_plot(df)
 
 st.plotly_chart(fig_month)
 
-def main():
-    st.title("PM2.5 and Asthma Rate Map (2025 Focus)")
+# def main():
+st.title("PM2.5 and Asthma Rate Map (2025 Focus)")
 
-    # Create and display map
-    folium_map = create_map(df_merged)
-    st_folium(folium_map, width=800, height=600)
+# Create and display map
+folium_map = create_map(df_merged)
+st_folium(folium_map, width=800, height=600)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
