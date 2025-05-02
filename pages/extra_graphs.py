@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-from plots_extra_graphs import demo_v_pm25, asthma_v_pm25, pm25_day_plot
+from plots.plots_extra_graphs import demo_v_pm25, asthma_v_pm25, pm25_day_plot
 
 
 

@@ -2,10 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-def load_data():
-    return pd.read_csv('data/demo.csv')
-
-df = load_data()
 demographic_vars = ['Smoking Prevalence', 'Obesity Prevalence', 'COPD Prevalence', 'Lack of Health Care Access Prevalence',
                     'Percent Population Within Half a Mile to Parks', 'Population Below Poverty Level', 'Housing Stress']
 
