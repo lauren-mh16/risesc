@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from plots import pm25_day_plot, pm25_month_plot, create_map, sit_type_icon, pm25_2025_color
+from plots import pm25_day_plot, pm25_month_plot, create_map, site_type_icon, pm25_2025_color
 from streamlit_folium import st_folium 
 
 
@@ -13,7 +13,7 @@ def load_data(url):
     df = pd.read_csv(url)
     return df
 
-df = load_data('data/clarity.csv')
+df = load_data('data/clarity.csv') 
 df_merged = load_data('data/pm25_asthma_clean.csv')
 
 
