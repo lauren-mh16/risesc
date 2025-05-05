@@ -17,6 +17,10 @@ def asthma_v_pm25(df):
         hover_name="Name",
         hover_data={
             "pm_conc": ":.2f",
+        },
+        labels={
+            'pm_conc': 'Average PM2.5 Concentration',
+            'asthma_rate': '2022 Asthma Rate by Census Tract',
         }
     )
     fig.update_traces(marker=dict(size=20, opacity=0.6))
@@ -38,7 +42,12 @@ def demo_v_pm25(df):
     }).reset_index()
 
     fig = px.scatter(
-        df_graph, x=selected_var, y='asthma_rate', hover_name="Name"
+        df_graph, x=selected_var, y='asthma_rate', hover_name="Name",
+        labels={
+            'pm_conc': 'Average PM2.5 Concentration',
+            'asthma_rate': '2022 Asthma Rate by Census Tract',
+            'day': 'Day of Week'
+        }
     )
     fig.update_traces(marker=dict(size=20, opacity=0.6))
 
@@ -63,8 +72,8 @@ def pm25_day_plot(df):
         title="PM2.5 Mean vs. Standard Deviation by Day",
         labels={
             'pm_conc_mean': 'Average PM2.5 Concentration',
-            'pm_conc_std': 'Standard Deviation of PM2.5 Concentration',
-            'day': 'Day of Measurement'
+            'pm_conc_std': 'Standard Deviation',
+            'day': 'Day of Week'
         },
         hover_name="Name",
         hover_data={
@@ -74,4 +83,28 @@ def pm25_day_plot(df):
     )
     return fig
 
+# Plot: PM2.5 by Month
+def pm25_month_plot(df):
+    df['month_cat'] = pd.Categorical(
+        df["month"],
+        categories=[11, 12, 1, 2, 3],
+        ordered=True
+    )
+    graph = df.groupby(["Name", "month_cat"]).agg({
+        "pm_conc": ["mean", "median", "std"],
+        "asthma_rate": "first",
+    }).reset_index()
+
+    graph.columns = ['_'.join(col).strip('_') for col in graph.columns.values]
+    graph = graph.dropna()
+
+    fig = px.scatter(graph, x='pm_conc_mean', y='asthma_rate_first', color='month_cat', size='pm_conc_std',
+                     labels={
+                         'pm_conc_mean': 'Average PM2.5 Concentration',
+                         'pm_conc_std': 'Standard Deviation',
+                         'month_cat': 'Month',
+                         'asthma_rate_first': '2022 Asthma Rate by Census Tract'
+                     }
+                     )
+    return fig
 

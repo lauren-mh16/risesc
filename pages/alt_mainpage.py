@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from old.plots import pm25_month_plot, create_map
+from plots.plots_main import trends_placeholder, create_map
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
@@ -20,11 +20,11 @@ col1, col2 = st.columns(2)
 
 with col2:
     st.title("Air Quality through Time")
-    fig_month = pm25_month_plot(df)
+    fig = trends_placeholder(df)
     # Optionally include the day plot too:
     # fig_day = pm25_day_plot(df)
     # st.plotly_chart(fig_day)
-    st.plotly_chart(fig_month)
+    st.plotly_chart(fig)
 
 with col1:
     st.title("PM2.5 Monitors Map")

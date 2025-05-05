@@ -1,25 +1,13 @@
 import plotly.express as px
 import pandas as pd
 import folium
+import plotly.express as px
 
 
-# Plot: PM2.5 by Month
-def pm25_month_plot(df):
-    df['month_cat'] = pd.Categorical(
-        df["month"],
-        categories=[11, 12, 1, 2, 3],
-        ordered=True
-    )
-    graph = df.groupby(["Name", "month_cat"]).agg({
-        "pm_conc": ["mean", "median", "std"],
-        "asthma_rate": "first",
-    }).reset_index()
-
-    graph.columns = ['_'.join(col).strip('_') for col in graph.columns.values]
-    graph = graph.dropna()
-
-    fig = px.scatter(graph, x='pm_conc_mean', y='asthma_rate_first', color='month_cat', size='pm_conc_std')
+def trends_placeholder(df):
+    fig = px.scatter(df, x = "datetime", y = "pm_conc", color = "Name")
     return fig
+
 
 # Helper: Color function for PM2.5
 def pm25_2025_color(pm25_2025):
