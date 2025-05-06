@@ -19,7 +19,7 @@ tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
 tab1, tab2 = st.tabs(["PM2.5 Monitors Map", "Air Quality Trends"])
 
 with tab1:
-    st.title("PM2.5 Monitors Map")
+    st.title("PM2.5 Monitors & Asthma Prevalence Map")
 
     st.markdown("### Welcome to Rise South City's air pollution dashboard.")
     st.markdown(
