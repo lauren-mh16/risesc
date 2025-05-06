@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from plots.plots_main import trends_placeholder, create_map
+from plots.plots_main import trends_placeholder, create_folium_map
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
@@ -13,6 +13,7 @@ def load_data(url):
 # Load your datasets
 df = load_data('data/clarity.csv')
 df_merged = load_data('data/clarity_asthma_merged.csv')
+tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
 
 # Build plots
 trends = trends_placeholder(df)
@@ -26,5 +27,5 @@ with tab2:
 
 with tab1:
     st.title("PM2.5 Monitors Map")
-    folium_map = create_map(df_merged)
-    st_folium(folium_map, width=800, height=600)
+    folium_map = create_folium_map(df_merged, tracts_path)
+    st_folium(folium_map, width=900, height=650)
