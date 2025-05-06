@@ -27,7 +27,7 @@ with tab2:
 
 with tab1:
     st.title("PM2.5 Monitors Map")
-    folium_map = create_folium_map(df_merged, tracts_path)
+    folium_map = create_folium_map(df_merged)
     st_folium(folium_map, use_container_width=True, height=650)
 
     
