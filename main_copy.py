@@ -28,23 +28,6 @@ with tab1:
     folium_map = create_folium_map(df_merged)
     st_folium(folium_map, use_container_width=True, height=650)
 
-    legend_html = """
-            <div style="border:1px solid grey; padding:10px; background-color: white; font-size:14px;">
-            <b>Legend</b><br><br>
-            <b>PM2.5 (2025) Color:</b><br>
-            <span style="color:green; font-size:16px;">■</span> Low (&lt;6 µg/m³)<br>
-            <span style="color:orange; font-size:16px;">■</span> Moderate (6–9 µg/m³)<br>
-            <span style="color:red; font-size:16px;">■</span> High (&gt;9 µg/m³)<br><br>
-            <b>Site Type Icons:</b><br>
-            🎓 School<br>
-            🏠 Home<br>
-            🍃 Park / Playlot<br>
-            🏢 Office<br>
-            📍 Other
-            </div>
-            """
-    st.markdown(legend_html, unsafe_allow_html=True)
-
 
 with tab2:
     trends = trends_placeholder(df)
