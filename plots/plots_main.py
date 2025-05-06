@@ -44,12 +44,14 @@ def site_type_emoji(name):
     else:
         return '&#128205;'   # 📍
 
-def create_folium_map(df_merged, tracts_path):
+def create_folium_map(df_merged):
     center_lat = df_merged['Latitude'].mean()
     center_lon = df_merged['Longitude'].mean()
     m = folium.Map(location=[center_lat, center_lon], zoom_start=12)
 
-    # Choropleth
+    # Add Census Tract Choropleth (Asthma Prevalence)
+    tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
+
     folium.Choropleth(
         geo_data=tracts_path,
         name='Asthma Prevalence Choropleth',
@@ -64,7 +66,7 @@ def create_folium_map(df_merged, tracts_path):
         highlight=True,
     ).add_to(m)
 
-    # GeoJson (tract outlines)
+    # GeoJson layer for tract outlines + search
     tracts_geojson = folium.GeoJson(
         tracts_path,
         name='Census Tracts (Outline)',
@@ -77,7 +79,7 @@ def create_folium_map(df_merged, tracts_path):
         tooltip=folium.GeoJsonTooltip(fields=['GEOID'], aliases=['Census Tract:'])
     ).add_to(m)
 
-    # FeatureGroups
+    # FeatureGroups for toggling
     fg_schools = folium.FeatureGroup(name='Schools').add_to(m)
     fg_homes = folium.FeatureGroup(name='Homes').add_to(m)
     fg_parks = folium.FeatureGroup(name='Parks / Playlots').add_to(m)
@@ -103,7 +105,7 @@ def create_folium_map(df_merged, tracts_path):
         color = pm25_2025_color(row['PM25_2025'])
         icon_type = site_type_icon(row['Name'])
 
-        marker = folium.Marker(
+        standard_marker = folium.Marker(
             location=(row['Latitude'], row['Longitude']),
             popup=folium.Popup(popup_text, max_width=300),
             icon=folium.Icon(color=color, icon=icon_type, prefix='fa'),
@@ -112,17 +114,17 @@ def create_folium_map(df_merged, tracts_path):
 
         name_lower = row['Name'].lower()
         if 'school' in name_lower:
-            marker.add_to(fg_schools)
+            standard_marker.add_to(fg_schools)
         elif 'home' in name_lower:
-            marker.add_to(fg_homes)
+            standard_marker.add_to(fg_homes)
         elif 'park' in name_lower or 'playlot' in name_lower:
-            marker.add_to(fg_parks)
+            standard_marker.add_to(fg_parks)
         elif 'office' in name_lower:
-            marker.add_to(fg_offices)
+            standard_marker.add_to(fg_offices)
         else:
-            marker.add_to(fg_other)
+            standard_marker.add_to(fg_other)
 
-    # Search bar (tract GEOIDs)
+    # Add search bar for Census Tract GEOIDs
     Search(
         layer=tracts_geojson,
         search_label='GEOID',
@@ -130,26 +132,28 @@ def create_folium_map(df_merged, tracts_path):
         collapsed=False
     ).add_to(m)
 
-    # Legend (smaller size)
+    # Add legend with dark mode-safe colors
     legend_html = """
     <div style="position: fixed;
          bottom: 40px; left: 40px; width: 200px; height: auto;
          border:1px solid grey; z-index:9999; font-size:12px;
-         background-color: white; padding: 8px;">
+         background-color: white; padding: 8px; color: black;">
     <b>Legend</b><br><br>
     <b>PM2.5 (2025) Color:</b><br>
-    <span style="color:green; font-size:14px;">■</span> Low (<6 µg/m³)<br>
+    <span style="color:green; font-size:14px;">■</span> Low (&lt;6 µg/m³)<br>
     <span style="color:orange; font-size:14px;">■</span> Moderate (6–9 µg/m³)<br>
-    <span style="color:red; font-size:14px;">■</span> High (>9 µg/m³)<br><br>
+    <span style="color:red; font-size:14px;">■</span> High (&gt;9 µg/m³)<br><br>
     <b>Site Type Icons:</b><br>
-    <span style="font-size:14px;">🎓</span> School<br>
-    <span style="font-size:14px;">🏠</span> Home<br>
-    <span style="font-size:14px;">🍃</span> Park / Playlot<br>
-    <span style="font-size:14px;">🏢</span> Office<br>
-    <span style="font-size:14px;">📍</span> Other
+    <span style="font-size:14px; color: black;">🎓 School</span><br>
+    <span style="font-size:14px; color: black;">🏠 Home</span><br>
+    <span style="font-size:14px; color: black;">🍃 Park / Playlot</span><br>
+    <span style="font-size:14px; color: black;">🏢 Office</span><br>
+    <span style="font-size:14px; color: black;">📍 Other</span>
     </div>
     """
     m.get_root().html.add_child(folium.Element(legend_html))
 
+    # ✅ Add LayerControl LAST
     folium.LayerControl().add_to(m)
+
     return m
