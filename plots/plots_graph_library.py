@@ -42,7 +42,7 @@ def demo_v_pm25(df):
     }).reset_index()
 
     fig = px.scatter(
-        df_graph, x=selected_var, y='asthma_rate', hover_name="Name",
+        df_graph, x=selected_var, y='pm_conc', hover_name="Name",
         labels={
             'pm_conc': 'Average PM2.5 Concentration',
             'asthma_rate': '2022 Asthma Rate by Census Tract',
