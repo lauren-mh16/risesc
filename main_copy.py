@@ -28,7 +28,7 @@ with tab1:
     "The **colored markers** represent PM2.5 pollution levels for 2025: green (low), orange (moderate), and red (high). Census tract outlines and asthma prevalence choropleths provide additional insight into how air quality may affect local residents’ health. "
     "You can also search for specific census tracts using their GEOID to quickly navigate the map."
     "\n\n**Note:** Data source descriptions and methodology details are available on a separate page. Please review the datasets to understand how the data was collected, key assumptions, and limitations."
-))
+)
 
 
     folium_map = create_folium_map(df_merged)
