@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 # import seaborn as sns
 
 # Import the updated Clarity data from the csv file
-data = pd.read_csv('risesouthcity_april_daily.csv') # 10/31 to 4/1
+data = pd.read_csv('data/risesouthcity_april_daily.csv') # 10/31 to 4/1
 # data2 = pd.read_csv('clarity_daily.csv') # 10/31 to 1/1
 # data3 = pd.read_csv('risesouthcity_clarity_24hmean_cleaned (1).csv') # 10/31 to 1/1
 
