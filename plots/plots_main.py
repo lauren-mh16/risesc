@@ -158,9 +158,9 @@ def create_folium_map(df_merged):
 
     return m
 
-def create_pm25_over_time():
+def create_pm25_over_time(df_og):
     # Load Clarity dataset
-    data = pd.read_csv('data/risesouthcity_april_daily.csv')
+    # data = pd.read_csv('data/risesouthcity_april_daily.csv')
 
     # Clean and process
     data['pm2_5ConcMass24HourMean.value'] = data['pm2_5ConcMass24HourMean.value'].fillna(0)
