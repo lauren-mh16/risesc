@@ -13,6 +13,7 @@ def load_data(url):
 # load datasets
 df = load_data('data/clarity.csv')
 df_merged = load_data('data/clarity_asthma_merged.csv')
+df_og = load_data('data/risesouthcity_april_daily.csv')
 tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
 
 # build diff tabs
@@ -36,7 +37,7 @@ with tab1:
 
 
 with tab2:
-    trends = trends_placeholder(df)
+    trends = create_pm25_over_time(df_og)
     st.title("Air Quality Through Time")
     st.plotly_chart(trends)
 
