@@ -24,9 +24,9 @@ with tab1:
     st.markdown("### Welcome to Rise South City's air pollution dashboard.")
     st.markdown(
     "This interactive map shows average **PM2.5 air quality readings** from monitors across San Bruno and South San Francisco in 2024 (Oct-Dec) and 2025 (Jan-Mar), overlaid with asthma prevalence rates at the census tract level. "
-    "\nUse the layer toggles to view different types of monitoring sites (schools, homes, parks, offices) and explore how air pollution intersects with asthma rates in different census tracts. "
-    "\nThe **colored markers** represent PM2.5 pollution levels for 2025: green (low), orange (moderate), and red (high). Census tract outlines and asthma prevalence choropleths provide additional insight into how air quality may affect local residents’ health. "
-    "\nYou can also search for specific census tracts using their GEOID to quickly navigate the map."
+    "\n\nUse the layer toggles to view different types of monitoring sites (schools, homes, parks, offices) and explore how air pollution intersects with asthma rates in different census tracts. "
+    "\n\nThe **colored markers** represent PM2.5 pollution levels for 2025: green (low), orange (moderate), and red (high). Census tract outlines and asthma prevalence choropleths provide additional insight into how air quality may affect local residents’ health. "
+    "\n\nYou can also search for specific census tracts using their GEOID to quickly navigate the map."
     "\n\n**Note:** Data source descriptions and methodology details are available on a separate page. Please review the datasets to understand how the data was collected, key assumptions, and limitations."
 )
 
