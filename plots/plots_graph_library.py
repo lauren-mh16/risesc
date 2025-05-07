@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import pydeck as pdk
+import time
+
 
 demographic_vars = ['Smoking Prevalence', 'Obesity Prevalence', 'COPD Prevalence', 'Lack of Health Care Access Prevalence',
                     'Percent Population Within Half a Mile to Parks', 'Population Below Poverty Level', 'Housing Stress']
@@ -107,4 +110,107 @@ def pm25_month_plot(df):
                      }
                      )
     return fig
+
+
+## create animated dot map
+
+def color_values(val):
+    if val <= 12:
+        return "Low"
+
+    elif val > 12 and val < 35:
+        return "Moderate"
+
+    elif val >= 35:
+        return "High"
+
+
+def animated_pm25(df):
+    df = df.sort_values("datetime")
+
+    # sensors = df["Name"].unique()
+    # dates = df["datetime"].unique()
+    # full_index = pd.MultiIndex.from_product([sensors, dates], names=["Name", "datetime"])
+    # full_df = pd.DataFrame(index=full_index).reset_index()
+    # merged = pd.merge(full_df, df, on=["Name", "datetime"], how="left")
+    # merged['pm_conc'] = merged['pm_conc'].fillna(1)
+    # merged['cats'] = merged['pm_conc'].apply(color_values)
+    df['cats'] = df['pm_conc'].apply(color_values) # only 8 values considered high
+
+    fig = px.scatter_map(
+        df,
+        lat="Latitude",
+        lon="Longitude",
+        size="pm_conc",  # Changes point size over time
+        #text="Name",
+        animation_frame="datetime",  # Creates animation per time period
+        zoom=11,
+        center={"lat": 37.6305, "lon": -122.4111},  # Center on San Bruno
+       # map_style="carto-positron",
+        color='cats',
+        color_discrete_map={
+            #"Missing": "black",
+            "Low": "green",
+            "Moderate": "orange",
+            "High": "red"
+        },
+        hover_data={"pm_conc": True, "Latitude": False, "Longitude": False, "Name": True}
+    )
+
+    fig.update_layout(
+        #margin=dict(l=10, r=10, t=10, b=10),
+        sliders=[{
+            'currentvalue': {'prefix': "Date: ", 'font': {'size': 14}},
+            'len': 0.9,  # shrink slider length
+            'x': 0.05,  # add side padding
+            'xanchor': 'left'
+        }],
+        height=400, width=400
+    )
+    return fig
+
+def animation_test(df):
+    df['datetime'] = pd.to_datetime(df['datetime'])
+    dates = sorted(df["datetime"].dt.date.unique())
+    selected_date = st.slider(
+        "Select Date",
+        min_value=dates[0],
+        max_value=dates[-1],
+        value=dates[0]
+    )
+    filtered = df[df["datetime"].dt.date == selected_date]
+    filtered = filtered.dropna()
+    filtered = filtered.rename(columns={"Longitude": "lon", "Latitude": "lat"})
+
+    if filtered.empty:
+        st.warning("No data available for this date.")
+        return None
+
+    layer = pdk.Layer(
+        "ScatterplotLayer",
+        data=filtered,
+        get_position='[lon, lat]',
+        get_radius='pm_conc * 20',
+        get_fill_color='[180, 0, 200, 140]',
+        pickable=True,
+        auto_highlight=True
+    )
+
+    view_state = pdk.ViewState(
+        latitude=filtered["lat"].mean(),
+        longitude=filtered["lon"].mean(),
+        zoom=11,
+        pitch=45
+    )
+
+    r = pdk.Deck(
+        layers=[layer],
+        initial_view_state=view_state,
+        tooltip={"text": "Site: {Name}\nPM2.5: {pm_conc}"},
+        map_style="mapbox://styles/mapbox/light-v9"
+    )
+
+    return r
+
+
 
