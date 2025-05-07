@@ -13,41 +13,31 @@ def load_data(url):
 # load datasets
 df = load_data('data/clarity.csv')
 df_merged = load_data('data/clarity_asthma_merged.csv')
+df_og = load_data('data/risesouthcity_april_daily.csv')
 tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
 
 # build diff tabs
-tab1, tab2 = st.tabs(["Map", "Trends"])
+tab1, tab2 = st.tabs(["PM2.5 Monitors Map", "Air Quality Trends"])
 
 with tab1:
-    st.title("PM2.5 Monitors Map")
+    st.title("PM2.5 Monitors & Asthma Prevalence Map")
 
-    st.markdown("### Hello testing an intro- Welcome to Rise Souty City's air pollution dashboard. "
-                "[something about how air pollution is important to monitor?")
-    st.markdown("---")
+    st.markdown("### Welcome to Rise South City's air pollution dashboard.")
+    st.markdown(
+    "This interactive map shows average **PM2.5 air quality readings** from monitors across San Bruno and South San Francisco in 2024 (Oct-Dec) and 2025 (Jan-Mar), overlaid with asthma prevalence rates at the census tract level. "
+    "\n\nUse the layer toggles to view different types of monitoring sites (schools, homes, parks, offices) and explore how air pollution intersects with asthma rates in different census tracts. "
+    "\n\nThe **colored markers** represent PM2.5 pollution levels for 2025: green (low), orange (moderate), and red (high). Census tract outlines and asthma prevalence choropleths provide additional insight into how air quality may affect local residents’ health. "
+    "\n\nYou can also search for specific census tracts using their GEOID to quickly navigate the map."
+    "\n\n**Note:** Data source descriptions and methodology details are available on a separate page. Please review the datasets to understand how the data was collected, key assumptions, and limitations."
+)
+
 
     folium_map = create_folium_map(df_merged)
     st_folium(folium_map, use_container_width=True, height=650)
 
-    legend_html = """
-            <div style="border:1px solid grey; padding:10px; background-color: white; font-size:14px;">
-            <b>Legend</b><br><br>
-            <b>PM2.5 (2025) Color:</b><br>
-            <span style="color:green; font-size:16px;">■</span> Low (&lt;6 µg/m³)<br>
-            <span style="color:orange; font-size:16px;">■</span> Moderate (6–9 µg/m³)<br>
-            <span style="color:red; font-size:16px;">■</span> High (&gt;9 µg/m³)<br><br>
-            <b>Site Type Icons:</b><br>
-            🎓 School<br>
-            🏠 Home<br>
-            🍃 Park / Playlot<br>
-            🏢 Office<br>
-            📍 Other
-            </div>
-            """
-    st.markdown(legend_html, unsafe_allow_html=True)
-
 
 with tab2:
-    trends = trends_placeholder(df)
+    trends = create_pm25_over_time(df_og)
     st.title("Air Quality Through Time")
     st.plotly_chart(trends)
 

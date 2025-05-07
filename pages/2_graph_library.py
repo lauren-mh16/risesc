@@ -5,8 +5,8 @@ from plots.plots_graph_library import demo_v_pm25, asthma_v_pm25, pm25_day_plot,
 if "graph_view" not in st.session_state:
     st.session_state.graph_view = None
 
-st.set_page_config(page_title="Additional Graphs", layout="wide")
-st.title("Additional Graphs")
+st.set_page_config(page_title="Exploratory Data Visualizations", layout="wide")
+st.title("Exploratory Data Visualizations")
 
 def load_data(url):
     return pd.read_csv(url)

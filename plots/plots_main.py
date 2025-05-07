@@ -157,3 +157,39 @@ def create_folium_map(df_merged):
     folium.LayerControl().add_to(m)
 
     return m
+
+def create_pm25_over_time(df_og):
+    # Load Clarity dataset
+    # data = pd.read_csv('data/risesouthcity_april_daily.csv')
+
+    # Clean and process
+    data['pm2_5ConcMass24HourMean.value'] = data['pm2_5ConcMass24HourMean.value'].fillna(0)
+    data['endOfPeriod'] = pd.to_datetime(data['endOfPeriod'])
+    data['mean_pm2_5ConcMass24HourMean.value'] = data.groupby('endOfPeriod')['pm2_5ConcMass24HourMean.value'].transform('mean')
+
+    # Build mean data frame
+    data_mean = data[['endOfPeriod', 'mean_pm2_5ConcMass24HourMean.value']].drop_duplicates().sort_values(by='endOfPeriod')
+
+    # Add selected locations
+    target_locations = ['Belle Air School', 'Rise South City Office', 'Portola Elementary']
+    for loc in target_locations:
+        loc_data = data[data['Name'] == loc][['endOfPeriod', 'pm2_5ConcMass24HourMean.value']]
+        loc_data = loc_data.rename(columns={'pm2_5ConcMass24HourMean.value': loc})
+        data_mean = pd.merge(data_mean, loc_data, on='endOfPeriod', how='left')
+
+    # Plot with matplotlib
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(data_mean['endOfPeriod'], data_mean['mean_pm2_5ConcMass24HourMean.value'], label='Average', color='black', linewidth=5, alpha=0.7)
+    ax.plot(data_mean['endOfPeriod'], data_mean['Belle Air School'], label='Belle Air School', color='blue', linewidth=1, alpha=0.7)
+    ax.plot(data_mean['endOfPeriod'], data_mean['Rise South City Office'], label='Rise South City Office', color='red', linewidth=1, alpha=0.7)
+    ax.plot(data_mean['endOfPeriod'], data_mean['Portola Elementary'], label='Portola Elementary', color='green', linewidth=1, alpha=0.7)
+
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%B'))
+    ax.set_xlabel('Date (Nov 2024 through Mar 2025)')
+    ax.set_ylabel('Mean PM2.5 (µg/m³)')
+    ax.set_title('Rolling Averages of PM2.5 Concentration (Clarity)')
+    ax.legend(title='Location')
+
+    # Streamlit output
+    st.subheader("PM2.5 Over Time")
+    st.pyplot(fig)
