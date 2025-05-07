@@ -15,7 +15,7 @@ st.markdown("---")
 st.markdown("#### PurpleAir Monitors (2018–Present)")
 st.markdown(
     "PurpleAir maintains an extensive network of low-cost air quality sensors. In South San Francisco and San Bruno, a total of "
-    "[INSERT NUMBER] monitors provide continuous air quality measurements. The dataset spans from 2018 to the present and is used "
+    "34 monitors provide continuous air quality measurements. The dataset spans from 2018 to the present and is used "
     "for most longitudinal analyses and visualizations. A key limitation is the presence of missing data; imputation was performed "
     "using a custom algorithm to address these gaps and maintain data continuity."
 )
