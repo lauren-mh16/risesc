@@ -155,7 +155,7 @@ def animated_pm25(df):
         #text="Name",
         animation_frame="datetime",  # Creates animation per time period
         zoom=11,
-        center={"lat": 37.6304, "lon": -122.4111},  # Center on San Bruno
+        center={"lat": 37.6306, "lon": -122.4111},  # Center on San Bruno
        # map_style="carto-positron",
         color='cats',
         color_discrete_map=colors,
