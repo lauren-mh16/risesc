@@ -34,6 +34,9 @@ with tab1:
 
     folium_map = create_folium_map(df_merged)
     st_folium(folium_map, use_container_width=True, height=650)
+    st.caption("Sources: Rise South City Clarity Monitors (2024-2025), San Mateo County Health Asthma Reporting (2022)")
+
+
 
 
 with tab2:
