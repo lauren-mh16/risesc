@@ -56,7 +56,7 @@ with st.expander("PM2.5 Interactive", expanded=True):
     st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
     st.markdown("---")
 
-    fig6 = animation_test(df_clarity)
-    st.pydeck_chart(fig6)
-    st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+    # fig6 = animation_test(df_clarity)
+    # st.pydeck_chart(fig6)
+    # st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
 
