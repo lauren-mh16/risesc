@@ -43,8 +43,12 @@ with tab2:
 
     averages = pm25_avg(df_og)
     st.plotly_chart(averages)
+    st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+
 
     figgy = trends_all(df_og)
     st.plotly_chart(figgy)
+    st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+
 
 
