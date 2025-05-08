@@ -32,7 +32,7 @@ def asthma_v_pm25(df):
 def demo_v_pm25(df):
 
     selected_var = st.selectbox(
-        "Choose a variable to visualize",
+        "Compare average PM2.5 (y-axis) with a health indicators of interest (x-axis): smoking, obesity, COPD, health care access, poverty, proximity to parks, and housing stress",
         options=demographic_vars
     )
 
