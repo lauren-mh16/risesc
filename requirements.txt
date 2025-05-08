@@ -3,6 +3,5 @@ pandas
 plotly
 streamlit-folium
 folium
-time
 matplotlib
 pydeck
