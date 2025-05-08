@@ -39,15 +39,12 @@ with tab1:
 with tab2:
 
     st.title("Air Quality Over Time")
-    st.markdown("Source: Clarity data")
 
 
     averages = pm25_avg(df_og)
     st.plotly_chart(averages)
 
     figgy = trends_all(df_og)
-    st.markdown("Click on a monitoring site to remove it from the plot visualization..")
-
     st.plotly_chart(figgy)
 
 
