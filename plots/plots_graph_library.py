@@ -178,48 +178,48 @@ def animated_pm25(df):
 
     return fig
 
-def animation_test(df):
-    df['datetime'] = pd.to_datetime(df['datetime'])
-    dates = sorted(df["datetime"].dt.date.unique())
-    selected_date = st.slider(
-        "Select Date",
-        min_value=dates[0],
-        max_value=dates[-1],
-        value=dates[0]
-    )
-    filtered = df[df["datetime"].dt.date == selected_date]
-    filtered = filtered.dropna()
-    filtered = filtered.rename(columns={"Longitude": "lon", "Latitude": "lat"})
+# def animation_test(df):
+#     df['datetime'] = pd.to_datetime(df['datetime'])
+#     dates = sorted(df["datetime"].dt.date.unique())
+#     selected_date = st.slider(
+#         "Select Date",
+#         min_value=dates[0],
+#         max_value=dates[-1],
+#         value=dates[0]
+#     )
+#     filtered = df[df["datetime"].dt.date == selected_date]
+#     filtered = filtered.dropna()
+#     filtered = filtered.rename(columns={"Longitude": "lon", "Latitude": "lat"})
 
-    if filtered.empty:
-        st.warning("No data available for this date.")
-        return None
+#     if filtered.empty:
+#         st.warning("No data available for this date.")
+#         return None
 
-    layer = pdk.Layer(
-        "ScatterplotLayer",
-        data=filtered,
-        get_position='[lon, lat]',
-        get_radius='pm_conc * 20',
-        get_fill_color='[180, 0, 200, 140]',
-        pickable=True,
-        auto_highlight=True
-    )
+#     layer = pdk.Layer(
+#         "ScatterplotLayer",
+#         data=filtered,
+#         get_position='[lon, lat]',
+#         get_radius='pm_conc * 20',
+#         get_fill_color='[180, 0, 200, 140]',
+#         pickable=True,
+#         auto_highlight=True
+#     )
 
-    view_state = pdk.ViewState(
-        latitude=filtered["lat"].mean(),
-        longitude=filtered["lon"].mean(),
-        zoom=11,
-        pitch=45
-    )
+#     view_state = pdk.ViewState(
+#         latitude=filtered["lat"].mean(),
+#         longitude=filtered["lon"].mean(),
+#         zoom=11,
+#         pitch=45
+#     )
 
-    r = pdk.Deck(
-        layers=[layer],
-        initial_view_state=view_state,
-        tooltip={"text": "Site: {Name}\nPM2.5: {pm_conc}"},
-        map_style="mapbox://styles/mapbox/light-v9"
-    )
+#     r = pdk.Deck(
+#         layers=[layer],
+#         initial_view_state=view_state,
+#         tooltip={"text": "Site: {Name}\nPM2.5: {pm_conc}"},
+#         map_style="mapbox://styles/mapbox/light-v9"
+#     )
 
-    return r
+#     return r
 
 
 
