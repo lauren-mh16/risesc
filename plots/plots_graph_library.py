@@ -126,14 +126,6 @@ def color_values(val):
 
 def animated_pm25(df):
     df = df.sort_values("datetime")
-
-    # sensors = df["Name"].unique()
-    # dates = df["datetime"].unique()
-    # full_index = pd.MultiIndex.from_product([sensors, dates], names=["Name", "datetime"])
-    # full_df = pd.DataFrame(index=full_index).reset_index()
-    # merged = pd.merge(full_df, df, on=["Name", "datetime"], how="left")
-    # merged['pm_conc'] = merged['pm_conc'].fillna(1)
-    # merged['cats'] = merged['pm_conc'].apply(color_values)
     df['cats'] = df['pm_conc'].apply(color_values) # only 8 values considered high
 
     colors = {
@@ -163,7 +155,7 @@ def animated_pm25(df):
         #text="Name",
         animation_frame="datetime",  # Creates animation per time period
         zoom=11,
-        center={"lat": 37.6305, "lon": -122.4111},  # Center on San Bruno
+        center={"lat": 37.6304, "lon": -122.4111},  # Center on San Bruno
        # map_style="carto-positron",
         color='cats',
         color_discrete_map=colors,
