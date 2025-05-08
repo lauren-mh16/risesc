@@ -4,5 +4,4 @@ plotly
 streamlit-folium
 folium
 time
-matplotlib.pyplot 
-matplotlib.dates 
+matplotlib
