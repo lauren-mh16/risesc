@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from plots.plots_graph_library import demo_v_pm25, asthma_v_pm25, pm25_day_plot, pm25_month_plot, animated_pm25, animation_test
+from plots.plots_graph_library import demo_v_pm25, asthma_v_pm25, pm25_day_plot, pm25_month_plot, animated_pm25
 
 if "graph_view" not in st.session_state:
     st.session_state.graph_view = None
