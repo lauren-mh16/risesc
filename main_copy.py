@@ -38,7 +38,7 @@ with tab1:
 
 with tab2:
 
-    st.subtitle("Air Quality Over Time")
+    st.title("Air Quality Over Time")
     st.markdown("Source: Clarity data")
 
 
