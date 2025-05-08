@@ -136,8 +136,27 @@ def animated_pm25(df):
     # merged['cats'] = merged['pm_conc'].apply(color_values)
     df['cats'] = df['pm_conc'].apply(color_values) # only 8 values considered high
 
+    colors = {
+        "Low": "blue",
+        "Moderate": "orange",
+        "High": "red"
+    }
+
+    dummy_rows = []
+    for dt in df['datetime'].unique():
+        for cat in colors:
+            dummy_rows.append({
+                "Latitude": None,
+                "Longitude": None,
+                "pm_conc": 10,
+                "Name": "",
+                "datetime": dt,
+                "cats": cat
+            })
+    df_graph = pd.concat([df, pd.DataFrame(dummy_rows)], ignore_index=True)
+
     fig = px.scatter_map(
-        df,
+        df_graph,
         lat="Latitude",
         lon="Longitude",
         size="pm_conc",  # Changes point size over time
@@ -147,25 +166,16 @@ def animated_pm25(df):
         center={"lat": 37.6305, "lon": -122.4111},  # Center on San Bruno
        # map_style="carto-positron",
         color='cats',
-        color_discrete_map={
-            #"Missing": "black",
-            "Low": "green",
-            "Moderate": "orange",
-            "High": "red"
-        },
+        color_discrete_map=colors,
         hover_data={"pm_conc": True, "Latitude": False, "Longitude": False, "Name": True}
     )
 
     fig.update_layout(
-        #margin=dict(l=10, r=10, t=10, b=10),
-        sliders=[{
-            'currentvalue': {'prefix': "Date: ", 'font': {'size': 14}},
-            'len': 0.9,  # shrink slider length
-            'x': 0.05,  # add side padding
-            'xanchor': 'left'
-        }],
-        height=400, width=400
+
+        height=400, width=400,
     )
+
+
     return fig
 
 def animation_test(df):
