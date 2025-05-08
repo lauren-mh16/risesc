@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from plots.plots_main import trends_placeholder, create_folium_map, create_pm25_over_time
+from plots.plots_main import create_folium_map, pm25_avg, trends_all
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
@@ -37,8 +37,13 @@ with tab1:
 
 
 with tab2:
-    trends = create_pm25_over_time(df_og)
+
     st.title("Air Quality Through Time")
-    st.plotly_chart(trends)
+
+    averages = pm25_avg(df_og)
+    st.plotly_chart(averages)
+
+    figgy = trends_all(df_og)
+    st.plotly_chart(figgy)
 
 
