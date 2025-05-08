@@ -20,11 +20,13 @@ col1, col2, = st.columns(2)
 with col1:
     with st.expander("PM2.5 and Asthma", expanded=True):
         st.markdown("This set of graphs explores pollution and health through looking at asthma rates, as well as demographic variation.")
+        st.markdown("---")
 
         fig2 = asthma_v_pm25(df_demo)
         st.plotly_chart(fig2, use_container_width=True)
         st.caption(
             "Sources: Rise South City Clarity Monitors (2024-2025), San Mateo County Health Asthma Reporting (2022)")
+        st.markdown("---")
 
         fig1 = demo_v_pm25(df_demo)
         st.plotly_chart(fig1, use_container_width=True)
@@ -36,9 +38,12 @@ with col1:
 with col2:
     with st.expander("PM2.5 Across Time", expanded=True):
         st.markdown("This set of graphs focuses on how PM2.5 levels vary through time.")
+        st.markdown("---")
+
         fig3 = pm25_day_plot(df_clarity)
         st.plotly_chart(fig3)
         st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+        st.markdown("---")
 
         fig4 = pm25_month_plot(df_clarity)
         st.plotly_chart(fig4)
@@ -49,6 +54,7 @@ with st.expander("PM2.5 Interactive", expanded=True):
     fig5 = animated_pm25(df_clarity)
     st.plotly_chart(fig5)
     st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+    st.markdown("---")
 
     fig6 = animation_test(df_clarity)
     st.pydeck_chart(fig6)
