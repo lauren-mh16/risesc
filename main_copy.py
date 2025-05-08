@@ -5,7 +5,7 @@ from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
 
-@st.cache_data
+@st.cache_data(ttl=0)
 def load_data(url):
     df = pd.read_csv(url)
     return df
