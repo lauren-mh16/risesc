@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from plots.plots_main import trends_placeholder, create_folium_map
+from plots.plots_main import trends_placeholder, create_folium_map, create_pm25_over_time
 from streamlit_folium import st_folium
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
