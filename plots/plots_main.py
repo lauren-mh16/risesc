@@ -160,7 +160,7 @@ def create_folium_map(df_merged):
 
     return m
 
-def create_pm25_over_time(df_og):
+def create_pm25_over_time(data):
     # Load Clarity dataset
     # data = pd.read_csv('data/risesouthcity_april_daily.csv')
 
@@ -193,5 +193,6 @@ def create_pm25_over_time(df_og):
     ax.legend(title='Location')
 
     # Streamlit output
-    st.subheader("PM2.5 Over Time")
-    st.pyplot(fig)
+    # st.subheader("PM2.5 Over Time")
+    # st.pyplot(fig)
+    return fig
