@@ -3,6 +3,8 @@ import pandas as pd
 import folium
 import plotly.express as px
 from folium.plugins import Search
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 def trends_placeholder(df):
     fig = px.scatter(df, x = "datetime", y = "pm_conc", color = "Name")
