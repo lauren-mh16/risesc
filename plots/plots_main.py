@@ -211,7 +211,7 @@ def trends_all(data):
         y=avg_df['mean_pm2_5'],
         mode='lines',
         name='Average (All Sites)',
-        line=dict(color='#1E4D94', width=4)
+        line=dict(color='#1E4D94', width=4,), showlegend=True)
     fig.update_layout(template='plotly_white', height=550)
 
     return fig
