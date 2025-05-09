@@ -2,8 +2,27 @@ import pandas as pd
 import streamlit as st
 from plots.plots_main import create_folium_map, pm25_avg, trends_all
 from streamlit_folium import st_folium
+from utils import lang_toggle, text_converter
+
 
 st.set_page_config(page_title="Air Quality Dashboard", layout="wide")
+
+lang_toggle()
+translations = {
+    "tab1_title": {
+        "en": "PM2.5 Monitors Map",
+        "es": "Mapa de monitores de PM2.5"
+    },
+    "tab2_title": {
+        "en": "Air Quality Trends",
+        "es": "Tendencias de la calidad del aire"
+    },
+    "tab1_header": {
+        "en": "PM2.5 Monitors & Asthma Prevalence Map",
+        "es": "Mapa de los monitores de PM2.5 y la prevalencia de asma"
+    }
+}
+
 
 @st.cache_data(ttl=0)
 def load_data(url):
@@ -17,10 +36,10 @@ df_og = load_data('data/risesouthcity_april_daily.csv')
 tracts_path = 'data/sf_sanbruno_census_tracts.geojson'
 
 # build diff tabs
-tab1, tab2 = st.tabs(["PM2.5 Monitors Map", "Air Quality Trends"])
+tab1, tab2 = st.tabs([text_converter("tab1_title", translations), text_converter("tab2_title", translations)])
 
 with tab1:
-    st.title("PM2.5 Monitors & Asthma Prevalence Map")
+    st.title(text_converter("PM2.5 Monitors & Asthma Prevalence Map", translations))
 
     st.markdown("### Welcome to Rise South City's air pollution dashboard.")
     st.markdown(
