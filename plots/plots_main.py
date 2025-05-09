@@ -194,24 +194,47 @@ def trends_all(data):
     data['endOfPeriod'] = pd.to_datetime(data['endOfPeriod'])
     data = data.sort_values(by=["Name", "endOfPeriod"])
 
-    fig = px.line(
-        data,
-        x='endOfPeriod',
-        y='pm2_5ConcMass24HourMean.value',
-        color='Name',
-        title='PM2.5 Trends by Monitoring Site',
-        labels={
-            'endOfPeriod': 'Date',
-            'pm2_5ConcMass24HourMean.value': 'PM2.5 (µg/m³)',
-            'Name': 'Monitoring Site'
-        },
+    fig = go.Figure()
+
+    # fig = px.line(
+    #     data,
+    #     x='endOfPeriod',
+    #     y='pm2_5ConcMass24HourMean.value',
+    #     color='Name',
+    #     title='PM2.5 Trends by Monitoring Site',
+    #     labels={
+    #         'endOfPeriod': 'Date',
+    #         'pm2_5ConcMass24HourMean.value': 'PM2.5 (µg/m³)',
+    #         'Name': 'Monitoring Site'
+    #     },
+    #     opacity=0.6
+    # )
+
+    for site in data['Name'].unique():
+        df_site = data[data['Name'] == site]
+        fig.add_trace(
+            go.Scatter(
+                x = df_site['endOfPeriod'],
+                y=df_site['pm2_5ConcMass24HourMean.value'],
+                mode = 'lines',
+                name = site,
+                opacity = 0.6,
+                hovertemplate='<br>Site: %{fullData.name}<br>Date: %{x|%b %d, %Y}<br>PM2.5: %{y:.2f} µg/m³<extra></extra>'
+            )
+        )
+
+    fig.add_trace(
+        go.Scatter(
+            x = avg_df['endOfPeriod'],
+            y=avg_df['mean_pm2_5'],
+            mode='lines',
+            name='Average (All Sites)',
+            line=dict(color='#1E4D94', width=4,), showlegend=True,
+            hovertemplate='<br>Site: %{fullData.name}<br>Date: %{x|%b %d, %Y}<br>PM2.5: %{y:.2f} µg/m³<extra></extra>'
+        )
+
     )
 
-    fig.add_scatter(x=avg_df['endOfPeriod'],
-        y=avg_df['mean_pm2_5'],
-        mode='lines',
-        name='Average (All Sites)',
-        line=dict(color='#1E4D94', width=4,), showlegend=True)
     fig.update_layout(template='plotly_white', height=550)
 
     return fig
