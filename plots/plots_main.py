@@ -185,6 +185,11 @@ def pm25_avg(data):
     return fig
 
 def trends_all(data):
+    avg_df = (
+        data.groupby('endOfPeriod', as_index=False)
+            .agg(mean_pm2_5=('pm2_5ConcMass24HourMean.value', 'mean'))
+    )
+
     data['pm2_5ConcMass24HourMean.value'] = data['pm2_5ConcMass24HourMean.value'].fillna(0)
     data['endOfPeriod'] = pd.to_datetime(data['endOfPeriod'])
     data = data.sort_values(by=["Name", "endOfPeriod"])
@@ -201,6 +206,12 @@ def trends_all(data):
             'Name': 'Monitoring Site'
         },
     )
+
+    fig.add_scatter(x=avg_df['endOfPeriod'],
+        y=avg_df['mean_pm2_5'],
+        mode='lines',
+        name='Average (All Sites)',
+        line=dict(color='#1E4D94', width=4)
     fig.update_layout(template='plotly_white', height=550)
 
     return fig
