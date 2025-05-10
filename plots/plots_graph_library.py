@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import pydeck as pdk
+from utils import t
 
 
 demographic_vars = ['Smoking Prevalence', 'Obesity Prevalence', 'COPD Prevalence', 'Lack of Health Care Access Prevalence',
@@ -21,8 +21,8 @@ def asthma_v_pm25(df):
             "pm_conc": ":.2f",
         },
         labels={
-            'pm_conc': 'Average PM2.5 Concentration',
-            'asthma_rate': '2022 Asthma Rate by Census Tract',
+            'pm_conc': t('Average PM2.5 Concentration'),
+            'asthma_rate': t('2022 Asthma Rate by Census Tract'),
         }
     )
     fig.update_traces(marker=dict(size=20, opacity=0.6))
@@ -32,8 +32,8 @@ def asthma_v_pm25(df):
 def demo_v_pm25(df):
 
     selected_var = st.selectbox(
-        "Compare average PM2.5 (y-axis) with a health indicators of interest (x-axis): smoking, obesity, COPD, health care access, poverty, proximity to parks, and housing stress",
-        options=demographic_vars
+        label=t('Select an Option'),
+        options=demographic_vars,
     )
 
     df_graph = df.groupby(["Name"]).agg({
@@ -46,9 +46,10 @@ def demo_v_pm25(df):
     fig = px.scatter(
         df_graph, x=selected_var, y='pm_conc', hover_name="Name",
         labels={
-            'pm_conc': 'Average PM2.5 Concentration',
-            'asthma_rate': '2022 Asthma Rate by Census Tract',
-            'day': 'Day of Week'
+            'pm_conc': t('Average PM2.5 Concentration'),
+            'asthma_rate': t('2022 Asthma Rate by Census Tract'),
+            'day': t('Day of Week'),
+            selected_var: t(selected_var)
         }
     )
     fig.update_traces(marker=dict(size=20, opacity=0.6))
@@ -73,9 +74,9 @@ def pm25_day_plot(df):
         color='day',
         title="PM2.5 Mean vs. Standard Deviation by Day",
         labels={
-            'pm_conc_mean': 'Average PM2.5 Concentration',
-            'pm_conc_std': 'Standard Deviation',
-            'day': 'Day of Week'
+            'pm_conc_mean': t('Average PM2.5 Concentration'),
+            'pm_conc_std': t('Standard Deviation'),
+            'day': t('Day of Week')
         },
         hover_name="Name",
         hover_data={
@@ -102,10 +103,10 @@ def pm25_month_plot(df):
 
     fig = px.scatter(graph, x='pm_conc_mean', y='asthma_rate_first', color='month_cat', size='pm_conc_std',
                      labels={
-                         'pm_conc_mean': 'Average PM2.5 Concentration',
-                         'pm_conc_std': 'Standard Deviation',
-                         'month_cat': 'Month',
-                         'asthma_rate_first': '2022 Asthma Rate by Census Tract'
+                         'pm_conc_mean': t('Average PM2.5 Concentration'),
+                         'pm_conc_std': t('Standard Deviation'),
+                         'month_cat': t('Month'),
+                         'asthma_rate_first': t('2022 Asthma Rate by Census Tract')
                      }
                      )
     return fig
@@ -115,13 +116,13 @@ def pm25_month_plot(df):
 
 def color_values(val):
     if val <= 12:
-        return "Low"
+        return t("Low")
 
     elif val > 12 and val < 35:
-        return "Moderate"
+        return t("Moderate")
 
     elif val >= 35:
-        return "High"
+        return t("High")
 
 
 def animated_pm25(df):
@@ -129,9 +130,9 @@ def animated_pm25(df):
     df['cats'] = df['pm_conc'].apply(color_values) # only 8 values considered high
 
     colors = {
-        "Low": "blue",
-        "Moderate": "orange",
-        "High": "red"
+        t("Low"): "blue",
+        t("Moderate"): "orange",
+        t("High"): "red"
     }
 
     dummy_rows = []
@@ -169,49 +170,4 @@ def animated_pm25(df):
 
 
     return fig
-
-# def animation_test(df):
-#     df['datetime'] = pd.to_datetime(df['datetime'])
-#     dates = sorted(df["datetime"].dt.date.unique())
-#     selected_date = st.slider(
-#         "Select Date",
-#         min_value=dates[0],
-#         max_value=dates[-1],
-#         value=dates[0]
-#     )
-#     filtered = df[df["datetime"].dt.date == selected_date]
-#     filtered = filtered.dropna()
-#     filtered = filtered.rename(columns={"Longitude": "lon", "Latitude": "lat"})
-
-#     if filtered.empty:
-#         st.warning("No data available for this date.")
-#         return None
-
-#     layer = pdk.Layer(
-#         "ScatterplotLayer",
-#         data=filtered,
-#         get_position='[lon, lat]',
-#         get_radius='pm_conc * 20',
-#         get_fill_color='[180, 0, 200, 140]',
-#         pickable=True,
-#         auto_highlight=True
-#     )
-
-#     view_state = pdk.ViewState(
-#         latitude=filtered["lat"].mean(),
-#         longitude=filtered["lon"].mean(),
-#         zoom=11,
-#         pitch=45
-#     )
-
-#     r = pdk.Deck(
-#         layers=[layer],
-#         initial_view_state=view_state,
-#         tooltip={"text": "Site: {Name}\nPM2.5: {pm_conc}"},
-#         map_style="mapbox://styles/mapbox/light-v9"
-#     )
-
-#     return r
-
-
 

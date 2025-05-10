@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 from plots.plots_graph_library import demo_v_pm25, asthma_v_pm25, pm25_day_plot, pm25_month_plot, animated_pm25
+from utils import t, select_lang
 
-if "graph_view" not in st.session_state:
-    st.session_state.graph_view = None
 
 st.set_page_config(page_title="Exploratory Data Visualizations", layout="wide")
-st.title("Exploratory Data Visualizations")
+
+select_lang()
+
+st.title(t("Exploratory Data Visualizations"))
 
 def load_data(url):
     return pd.read_csv(url)
@@ -18,20 +20,23 @@ df_clarity = load_data('data/clarity.csv')
 
 
 # with col1:
-with st.expander("PM2.5 and Asthma", expanded=True):
-    st.markdown("This set of graphs explores pollution and health through looking at asthma rates, as well as demographic variation.")
+with st.expander(t("PM2.5 and Asthma"), expanded=True):
+    st.markdown(t("This set of graphs explores pollution and health through looking at asthma rates (first plot) "
+                  "and health indicators of interest (second plot)."))
     st.markdown("---")
 
     fig2 = asthma_v_pm25(df_demo)
     st.plotly_chart(fig2, use_container_width=True)
     st.caption(
-        "Sources: Rise South City Clarity Monitors (2024-2025), San Mateo County Health Asthma Reporting (2022)")
+       t("Sources: Rise South City Clarity Monitors (2024-2025), San Mateo County Health Asthma Reporting (2022)"))
     st.markdown("---")
 
+    # st.markdown(t("Compare average PM2.5 (y-axis) with a health indicators of interest (x-axis): smoking, obesity, "
+    #                 "COPD, health care access, poverty, proximity to parks, and housing stress"))
     fig1 = demo_v_pm25(df_demo)
     st.plotly_chart(fig1, use_container_width=True)
     st.caption(
-        "Sources: San Mateo County Health Asthma Reporting (2022), U.S. Census Demographics Reporting (2020)")
+        t("Sources: San Mateo County Health Asthma Reporting (2022), U.S. Census Demographics Reporting (2020)"))
 
 
 
@@ -50,13 +55,14 @@ with st.expander("PM2.5 and Asthma", expanded=True):
 #         st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
 
 
-with st.expander("PM2.5 Interactive", expanded=True):
+with st.expander(t("PM2.5 Interactive"), expanded=True):
+    st.markdown(t("This interactive map displays PM2.5 through time. Use the slider to view a specific date's PM2.5 or "
+                  "press the play button for the animation to run automatically."))
+    st.markdown("---")
     fig5 = animated_pm25(df_clarity)
     st.plotly_chart(fig5)
-    st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+    st.caption(t("Source: Rise South City Clarity Monitors (2024-2025)"))
     st.markdown("---")
 
-    # fig6 = animation_test(df_clarity)
-    # st.pydeck_chart(fig6)
-    # st.caption("Source: Rise South City Clarity Monitors (2024-2025)")
+
 

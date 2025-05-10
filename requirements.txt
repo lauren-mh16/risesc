@@ -6,3 +6,6 @@ folium
 matplotlib
 pydeck
 googletrans==4.0.0-rc1
+geopandas
+shapely
+geopy

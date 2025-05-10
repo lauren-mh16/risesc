@@ -6,11 +6,7 @@ from folium.plugins import Search
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import plotly.graph_objects as go
-
-
-def trends_placeholder(df):
-    fig = px.scatter(df, x = "datetime", y = "pm_conc", color = "Name")
-    return fig
+from utils import t
 
 
 # Helper: Color function for PM2.5
@@ -66,7 +62,7 @@ def create_folium_map(df_merged):
         fill_opacity=0.5,
         line_opacity=0.7,
         nan_fill_color='white',
-        legend_name='Asthma Prevalence (%) (Adults 18+)',
+        legend_name=t('Asthma Prevalence (%) (Adults 18+)'),
         highlight=True,
     ).add_to(m)
 
@@ -177,8 +173,8 @@ def pm25_avg(data):
         avg_df,
         x='endOfPeriod',
         y='mean_pm2_5',
-        title='Average PM2.5 Across All Monitors',
-        labels={'endOfPeriod': 'Date', 'mean_pm2_5': 'PM2.5 (µg/m³)'},
+        title=t('Average PM2.5 Across All Monitors'),
+        labels={'endOfPeriod': t('Date'), 'mean_pm2_5': t('PM2.5 (µg/m³)')},
     )
     fig.update_traces(line=dict(color='#1E4D94', width=3))
     fig.update_layout(template='plotly_white', height=450)
@@ -195,20 +191,6 @@ def trends_all(data):
     data = data.sort_values(by=["Name", "endOfPeriod"])
 
     fig = go.Figure()
-
-    # fig = px.line(
-    #     data,
-    #     x='endOfPeriod',
-    #     y='pm2_5ConcMass24HourMean.value',
-    #     color='Name',
-    #     title='PM2.5 Trends by Monitoring Site',
-    #     labels={
-    #         'endOfPeriod': 'Date',
-    #         'pm2_5ConcMass24HourMean.value': 'PM2.5 (µg/m³)',
-    #         'Name': 'Monitoring Site'
-    #     },
-    #     opacity=0.6
-    # )
 
     for site in data['Name'].unique():
         df_site = data[data['Name'] == site]
@@ -235,6 +217,7 @@ def trends_all(data):
 
     )
 
-    fig.update_layout(template='plotly_white', height=550)
+    fig.update_layout(template='plotly_white', height=550, title=t("PM2.5 through time across monitors"),
+                      xaxis_title=t('Date'), yaxis_title=t('PM2.5 (µg/m³)'))
 
     return fig
