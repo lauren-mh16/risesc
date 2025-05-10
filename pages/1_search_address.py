@@ -19,7 +19,7 @@ with open("data/sf_sanbruno_census_tracts.geojson") as f:
     tracts_geojson = json.load(f)
 
 
-address = st.text_input("Enter your address:")
+address = st.text_input("Enter your address", placeholder = "Please follow this exact format: 123 Street, City, CA")
 tract_id = None
 
 if address:
