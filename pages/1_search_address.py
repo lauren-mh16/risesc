@@ -3,9 +3,13 @@ import pandas as pd
 import json
 from shapely.geometry import Point, shape
 from geopy.geocoders import Nominatim
+from utils import t, select_lang
 
 st.set_page_config(page_title="Address Search-Up", layout="wide")
-st.title("Type in your address and get info!")
+
+select_lang()
+
+st.title(t("Type in your address and get info!"))
 geolocator = Nominatim(user_agent="my_app", timeout=5)
 
 
@@ -19,7 +23,7 @@ with open("data/sf_sanbruno_census_tracts.geojson") as f:
     tracts_geojson = json.load(f)
 
 
-address = st.text_input("Enter your address", placeholder = "Please follow this exact format: 123 Street, City, CA")
+address = st.text_input(t("Enter your address"), placeholder = t("Please follow this exact format: 123 Street, City, CA"))
 tract_id = None
 
 if address:
@@ -42,17 +46,23 @@ if address:
                 break
 
         if not tract_id:
-            st.warning("Could not match to a census tract.")
+            st.warning(t("Could not match to a census tract."))
     else:
-        st.error("Address not found.")
+        st.error(t("Address not found."))
 
 
 if tract_id:
     rows = df[df["Census_Tract"] == tract_id[1:]]
     if not rows.empty:
         r = rows.iloc[0]
-        st.metric("PM2.5", f"{r['pm_conc']} µg/m³")
-        st.metric("Asthma Rate", f"{r['asthma_rate']}%")
-        st.metric("Population Below Poverty Level", f"{r['Population Below Poverty Level']}")
+        mean_pm = round(rows['pm_conc'].mean(), 2)
+        std_pm = round(rows['pm_conc'].std(), 2)
+        st.metric(t("PM2.5 average (Nov 2024 - March 2025)"), f"{mean_pm} µg/m³")
+        st.metric(t("PM2.5 standard deviation (Nov 2024 - March 2025)"), f"{std_pm} µg/m³")
+        st.metric(t("Asthma Rate (2022)"), f"{r['asthma_rate']}%")
+        st.metric(t("Population Below Poverty Level (year?)"), f"{r['Population Below Poverty Level']}")
+        st.metric(t("Smoking Prevalence"), f"{r['Smoking Prevalence']}")
+        st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']}")
+        st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']}")
     else:
-        st.error("No information found")
+        st.error(t("No information found"))
