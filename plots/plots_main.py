@@ -11,12 +11,49 @@ from utils import t
 
 # Helper: Color function for PM2.5
 def pm25_2025_color(pm25_2025):
-    if pm25_2025 < 6:
-        return 'green'
-    elif 6 <= pm25_2025 < 9:
-        return 'orange'
-    else:
-        return 'red'
+    """
+    Returns a HEX color code for a given PM2.5 value (24-hour avg),
+    using the EPA 2025 color scale, mapped continuously between thresholds.
+    """
+    # Define EPA breakpoints and corresponding hex colors
+    breakpoints = [0.0, 12.0, 35.4, 55.4, 150.4, 250.4, 500.4]
+    colors = [
+        "#00E400",  # Good (Green)
+        "#FFFF00",  # Moderate (Yellow)
+        "#FF7E00",  # Unhealthy for Sensitive Groups (Orange)
+        "#FF0000",  # Unhealthy (Red)
+        "#8F3F97",  # Very Unhealthy (Purple)
+        "#7E0023"   # Hazardous (Maroon)
+    ]
+
+    # Handle values above maximum
+    if pm25_2025 >= breakpoints[-1]:
+        return colors[-1]
+    if pm25_2025 <= breakpoints[0]:
+        return colors[0]
+
+    # Interpolate between the appropriate breakpoints
+    for i in range(len(breakpoints) - 1):
+        if breakpoints[i] <= pm25_2025 < breakpoints[i + 1]:
+            # Linear interpolation between the two colors
+            ratio = ((pm25_2025 - breakpoints[i]) /
+                     (breakpoints[i + 1] - breakpoints[i]))
+            color_start = colors[i].lstrip('#')
+            color_end = colors[i + 1].lstrip('#')
+
+            # Convert hex to RGB
+            r1, g1, b1 = int(color_start[0:2], 16), int(color_start[2:4], 16), int(color_start[4:6], 16)
+            r2, g2, b2 = int(color_end[0:2], 16), int(color_end[2:4], 16), int(color_end[4:6], 16)
+
+            # Interpolate RGB
+            r = int(r1 + (r2 - r1) * ratio)
+            g = int(g1 + (g2 - g1) * ratio)
+            b = int(b1 + (b2 - b1) * ratio)
+
+            return f'#{r:02X}{g:02X}{b:02X}'
+
+    # Fallback (shouldn't be hit)
+    return "#000000"
 
 # Helper: Icon type based on site name
 def site_type_icon(name):
