@@ -26,12 +26,6 @@ def pm25_2025_color(pm25_2025):
         "#7E0023"   # Hazardous (Maroon)
     ]
 
-    # Handle values above maximum
-    if pm25_2025 >= breakpoints[-1]:
-        return colors[-1]
-    if pm25_2025 <= breakpoints[0]:
-        return colors[0]
-
     # Interpolate between the appropriate breakpoints
     for i in range(len(breakpoints) - 1):
         if breakpoints[i] <= pm25_2025 < breakpoints[i + 1]:
@@ -142,12 +136,16 @@ def create_folium_map(df_merged):
         color = pm25_2025_color(row['PM25_2025'])
         icon_type = site_type_icon(row['Name'])
 
-        standard_marker = folium.Marker(
+        standard_marker = folium.CircleMarker(
             location=(row['Latitude'], row['Longitude']),
+            radius=7,
+            fill=True,
+            fill_color=color,
+            color=color,
+            fill_opacity=0.9,
             popup=folium.Popup(popup_text, max_width=300),
-            icon=folium.Icon(color=color, icon=icon_type, prefix='fa'),
-            tooltip=row['Name']
-        )
+            tooltip=row['Name'])
+
 
         name_lower = row['Name'].lower()
         if 'school' in name_lower:
