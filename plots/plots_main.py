@@ -11,12 +11,43 @@ from utils import t
 
 # Helper: Color function for PM2.5
 def pm25_2025_color(pm25_2025):
-    if pm25_2025 < 6:
-        return 'green'
-    elif 6 <= pm25_2025 < 9:
-        return 'orange'
-    else:
-        return 'red'
+    """
+    Returns a HEX color code for a given PM2.5 value (24-hour avg),
+    using the EPA 2025 color scale, mapped continuously between thresholds.
+    """
+    # Define EPA breakpoints and corresponding hex colors
+    breakpoints = [0.0, 12.0, 35.4, 55.4, 150.4, 250.4, 500.4]
+    colors = [
+        "#00E400",  # Good (Green)
+        "#FFFF00",  # Moderate (Yellow)
+        "#FF7E00",  # Unhealthy for Sensitive Groups (Orange)
+        "#FF0000",  # Unhealthy (Red)
+        "#8F3F97",  # Very Unhealthy (Purple)
+        "#7E0023"   # Hazardous (Maroon)
+    ]
+
+    # Interpolate between the appropriate breakpoints
+    for i in range(len(breakpoints) - 1):
+        if breakpoints[i] <= pm25_2025 < breakpoints[i + 1]:
+            # Linear interpolation between the two colors
+            ratio = ((pm25_2025 - breakpoints[i]) /
+                     (breakpoints[i + 1] - breakpoints[i]))
+            color_start = colors[i].lstrip('#')
+            color_end = colors[i + 1].lstrip('#')
+
+            # Convert hex to RGB
+            r1, g1, b1 = int(color_start[0:2], 16), int(color_start[2:4], 16), int(color_start[4:6], 16)
+            r2, g2, b2 = int(color_end[0:2], 16), int(color_end[2:4], 16), int(color_end[4:6], 16)
+
+            # Interpolate RGB
+            r = int(r1 + (r2 - r1) * ratio)
+            g = int(g1 + (g2 - g1) * ratio)
+            b = int(b1 + (b2 - b1) * ratio)
+
+            return f'#{r:02X}{g:02X}{b:02X}'
+
+    # Fallback (shouldn't be hit)
+    return "#000000"
 
 # Helper: Icon type based on site name
 def site_type_icon(name):
@@ -43,6 +74,43 @@ def site_type_emoji(name):
         return '&#127970;'   # 🏢
     else:
         return '&#128205;'   # 📍
+
+def create_div_icon_marker(row):
+    color = pm25_2025_color(row['PM25_2025'])
+    emoji = site_type_emoji(row['Name'])  
+
+    html = f"""
+    <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        background-color: {color};
+        border-radius: 50%;
+        border: 1.5px solid black;
+        font-size: 14px;
+        text-align: center;
+    ">
+        {emoji}
+    </div>
+    """
+
+    popup_text = (
+        f"<b>{emoji} {row['Name']}</b><br>"
+        f"PM2.5 (2024): {row['PM25_2024']:.2f} µg/m³<br>"
+        f"PM2.5 (2025): {row['PM25_2025']:.2f} µg/m³<br>"
+        f"Census Tract: {row['Census_Tract']}<br>"
+        f"Asthma Prevalence: {row['asthma_rate']}% of adults (Year: {int(row['year'])})<br>"
+        f"Upper CI: {row['Rate Upper Confidence Interval']}"
+    )
+
+    return folium.Marker(
+        location=(row['Latitude'], row['Longitude']),
+        icon=folium.DivIcon(html=html),
+        popup=folium.Popup(popup_text, max_width=300),
+        tooltip=row['Name']
+    )
 
 def create_folium_map(df_merged):
     center_lat = df_merged['Latitude'].mean()
@@ -88,29 +156,7 @@ def create_folium_map(df_merged):
 
     # Add markers
     for _, row in df_merged.iterrows():
-        site_emoji = site_type_emoji(row['Name'])
-        epa_note = ""
-        if row['PM25_2025'] >= 12:
-            epa_note = "<br><b style='color:red;'>⚠️ Above EPA annual limit (12 µg/m³)</b>"
-
-        popup_text = (
-            f"<b>{site_emoji} {row['Name']}</b><br>"
-            f"PM2.5 (2024): {row['PM25_2024']:.2f} µg/m³<br>"
-            f"PM2.5 (2025): {row['PM25_2025']:.2f} µg/m³{epa_note}<br>"
-            f"Census Tract: {row['Census_Tract']}<br>"
-            f"Asthma Prevalence: {row['asthma_rate']}% of adults (Year: {int(row['year'])})<br>"
-            f"Upper CI: {row['Rate Upper Confidence Interval']}"
-        )
-
-        color = pm25_2025_color(row['PM25_2025'])
-        icon_type = site_type_icon(row['Name'])
-
-        standard_marker = folium.Marker(
-            location=(row['Latitude'], row['Longitude']),
-            popup=folium.Popup(popup_text, max_width=300),
-            icon=folium.Icon(color=color, icon=icon_type, prefix='fa'),
-            tooltip=row['Name']
-        )
+        standard_marker = create_div_icon_marker(row)
 
         name_lower = row['Name'].lower()
         if 'school' in name_lower:
