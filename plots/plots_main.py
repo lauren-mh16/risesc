@@ -211,8 +211,9 @@ def trends_all(data):
             y=avg_df['mean_pm2_5'],
             mode='lines',
             name='Average (All Sites)',
+            visible='legendonly',
             line=dict(color='#1E4D94', width=4,), showlegend=True,
-            hovertemplate='<br>Site: %{fullData.name}<br>Date: %{x|%b %d, %Y}<br>PM2.5: %{y:.2f} µg/m³<extra></extra>'
+            hovertemplate='<br>Site: %{fullData.name}<br>Date: %{x|%b %d, %Y}<br>PM2.5: %{y:.2f} µg/m³<extra></extra>',
         )
 
     )

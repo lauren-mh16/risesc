@@ -9,21 +9,25 @@ st.set_page_config(page_title="Address Search-Up", layout="wide")
 
 select_lang()
 
-st.title(t("Type in your address and get info!"))
+st.title(t("Search for information in your neighborhood"))
 geolocator = Nominatim(user_agent="my_app", timeout=5)
 
 
 def load_data(url):
     return pd.read_csv(url)
 
-df = load_data('data/demo.csv')
-df['Census_Tract'] = df['Census_Tract'].astype(str)
+df_pollution = load_data('data/demo.csv')
+df_pollution['Census_Tract'] = df_pollution['Census_Tract'].astype(str)
+df_demo = load_data('data/CA_census tracts_demographic_data (1).csv')
+df_demo['Census_Tract'] = df_demo['GEOID'].astype(str)
 
 with open("data/sf_sanbruno_census_tracts.geojson") as f:
     tracts_geojson = json.load(f)
 
 
-address = st.text_input(t("Enter your address"), placeholder = t("Please follow this exact format: 123 Street, City, CA"))
+address = st.text_input(t("Please follow this format: 123 Street, City, CA"), placeholder=t("123 Street, City, CA"))
+st.markdown(t("**Note:** Information is only available for Bay Area neighborhoods from San Francisco to Menlo Park."))
+
 tract_id = None
 
 if address:
@@ -52,7 +56,7 @@ if address:
 
 
 if tract_id:
-    rows = df[df["Census_Tract"] == tract_id[1:]]
+    rows = df_pollution[df_pollution["Census_Tract"] == tract_id[1:]]
     if not rows.empty:
         r = rows.iloc[0]
         mean_pm = round(rows['pm_conc'].mean(), 2)
@@ -60,9 +64,16 @@ if tract_id:
         st.metric(t("PM2.5 average (Nov 2024 - March 2025)"), f"{mean_pm} µg/m³")
         st.metric(t("PM2.5 standard deviation (Nov 2024 - March 2025)"), f"{std_pm} µg/m³")
         st.metric(t("Asthma Rate (2022)"), f"{r['asthma_rate']}%")
-        st.metric(t("Population Below Poverty Level (year?)"), f"{r['Population Below Poverty Level']}")
-        st.metric(t("Smoking Prevalence"), f"{r['Smoking Prevalence']}")
+    else:
+        st.error(t("No air quality information found"))
+
+if tract_id:
+    rows = df_demo[df_demo["Census_Tract"] == tract_id[1:]]
+    if not rows.empty:
+        r = rows.iloc[0]
+        st.metric(t("Population Below Poverty Level (year ?)"), f"{r['Population Below Poverty Level']}")
+        st.metric(t("Smoking Prevalence (units ?)"), f"{r['Smoking Prevalence']}")
         st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']}")
         st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']}")
     else:
-        st.error(t("No information found"))
+        st.error(t("No demographics information found"))
