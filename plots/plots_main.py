@@ -75,6 +75,43 @@ def site_type_emoji(name):
     else:
         return '&#128205;'   # 📍
 
+def create_div_icon_marker(row):
+    color = pm25_2025_color(row['PM25_2025'])
+    emoji = site_type_emoji(row['Name'])  
+
+    html = f"""
+    <div style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background-color: {color};
+        border-radius: 50%;
+        border: 1.5px solid black;
+        font-size: 14px;
+        text-align: center;
+    ">
+        {emoji}
+    </div>
+    """
+
+    popup_text = (
+        f"<b>{emoji} {row['Name']}</b><br>"
+        f"PM2.5 (2024): {row['PM25_2024']:.2f} µg/m³<br>"
+        f"PM2.5 (2025): {row['PM25_2025']:.2f} µg/m³<br>"
+        f"Census Tract: {row['Census_Tract']}<br>"
+        f"Asthma Prevalence: {row['asthma_rate']}% of adults (Year: {int(row['year'])})<br>"
+        f"Upper CI: {row['Rate Upper Confidence Interval']}"
+    )
+
+    return folium.Marker(
+        location=(row['Latitude'], row['Longitude']),
+        icon=folium.DivIcon(html=html),
+        popup=folium.Popup(popup_text, max_width=300),
+        tooltip=row['Name']
+    )
+
 def create_folium_map(df_merged):
     center_lat = df_merged['Latitude'].mean()
     center_lon = df_merged['Longitude'].mean()
@@ -119,33 +156,7 @@ def create_folium_map(df_merged):
 
     # Add markers
     for _, row in df_merged.iterrows():
-        site_emoji = site_type_emoji(row['Name'])
-        epa_note = ""
-        if row['PM25_2025'] >= 12:
-            epa_note = "<br><b style='color:red;'>⚠️ Above EPA annual limit (12 µg/m³)</b>"
-
-        popup_text = (
-            f"<b>{site_emoji} {row['Name']}</b><br>"
-            f"PM2.5 (2024): {row['PM25_2024']:.2f} µg/m³<br>"
-            f"PM2.5 (2025): {row['PM25_2025']:.2f} µg/m³{epa_note}<br>"
-            f"Census Tract: {row['Census_Tract']}<br>"
-            f"Asthma Prevalence: {row['asthma_rate']}% of adults (Year: {int(row['year'])})<br>"
-            f"Upper CI: {row['Rate Upper Confidence Interval']}"
-        )
-
-        color = pm25_2025_color(row['PM25_2025'])
-        icon_type = site_type_icon(row['Name'])
-
-        standard_marker = folium.CircleMarker(
-            location=(row['Latitude'], row['Longitude']),
-            radius=7,
-            fill=True,
-            fill_color=color,
-            color=color,
-            fill_opacity=0.9,
-            popup=folium.Popup(popup_text, max_width=300),
-            tooltip=row['Name'])
-
+        standard_marker = create_div_icon_marker(row)
 
         name_lower = row['Name'].lower()
         if 'school' in name_lower:
