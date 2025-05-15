@@ -84,8 +84,8 @@ def create_div_icon_marker(row):
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
         background-color: {color};
         border-radius: 50%;
         border: 1.5px solid black;
