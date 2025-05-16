@@ -71,9 +71,9 @@ if tract_id:
     rows = df_demo[df_demo["Census_Tract"] == tract_id[1:]]
     if not rows.empty:
         r = rows.iloc[0]
-        st.metric(t("Population Below Poverty Level (year ?)"), f"{r['Population Below Poverty Level']}")
-        st.metric(t("Smoking Prevalence (units ?)"), f"{r['Smoking Prevalence']}")
-        st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']}")
-        st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']}")
+        st.metric(t("Population Below Poverty Level"), f"{r['Population Below Poverty Level']}")
+        st.metric(t("Smoking Prevalence"), f"{r['Smoking Prevalence']%}")
+        st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']%}")
+        st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']%}")
     else:
         st.error(t("No demographics information found"))
