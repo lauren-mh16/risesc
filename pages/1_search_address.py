@@ -38,10 +38,8 @@ if address:
         st.success(f"Found: {location.address}")
         lat, lon = location.latitude, location.longitude
 
-        # Convert to shapely Point
         point = Point(lon, lat)
 
-        # Find matching tract
         for feature in tracts_geojson["features"]:
             polygon = shape(feature["geometry"])
             if polygon.contains(point):

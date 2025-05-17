@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from utils import t
 
 
@@ -152,12 +153,10 @@ def animated_pm25(df):
         df_graph,
         lat="Latitude",
         lon="Longitude",
-        size="pm_conc",  # Changes point size over time
-        #text="Name",
-        animation_frame="datetime",  # Creates animation per time period
+        size="pm_conc",
+        animation_frame="datetime",
         zoom=11,
-        center={"lat": 37.640664, "lon": -122.4111},  # Center on San Bruno
-       # map_style="carto-positron",
+        center={"lat": 37.640664, "lon": -122.4111},
         color='cats',
         color_discrete_map=colors,
         hover_data={"pm_conc": True, "Latitude": False, "Longitude": False, "Name": True}
@@ -168,6 +167,61 @@ def animated_pm25(df):
         height=400, width=400,
     )
 
-
     return fig
 
+## 24hr graph
+def day_graph(df):
+
+    df['endOfPeriod'] = pd.to_datetime(df['endOfPeriod'])
+
+    min_date = df['endOfPeriod'].min().date()
+    max_date = df['endOfPeriod'].max().date()
+    start_date, end_date = st.date_input(
+        "Select date range",
+        [min_date, max_date],
+        min_value=min_date,
+        max_value=max_date
+    )
+
+    mask = (df['endOfPeriod'].dt.date >= start_date) & (df['endOfPeriod'].dt.date <= end_date)
+    filtered = df.loc[mask].copy()
+    filtered['hour'] = filtered['endOfPeriod'].dt.hour
+
+    avg = filtered.groupby(["Name", 'hour'])["pm_conc"].mean().reset_index()
+
+    avg_df = filtered.groupby('hour')['pm_conc'].mean().reset_index()
+
+    fig = px.line(
+        avg,
+        x='hour',
+        y='pm_conc',
+        color='Name',
+        #color_discrete_sequence=custom_colors,
+        labels={"hour": "Hour of day", "pm_conc": "Average PM2.5"},
+        title="Averaged 24h PM2.5 concentration"
+    )
+
+
+    fig.update_layout(
+        template="plotly_white",
+        yaxis=dict(range=[0, 20]),
+        font=dict(family="Verdana", size=14),
+        #xaxis=dict(tickmode="array", tickvals=avg["hour"][::5]),
+        xaxis_tickangle=45
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=avg_df['hour'],
+            y=avg_df['pm_conc'],
+            mode='lines',
+            name='Average (All Sites)',
+            line=dict(color='#1E4D94', width=4, ), showlegend=True,
+        )
+    )
+
+    for trace in fig.data:
+        if trace.name != "Average (All Sites)":
+            trace.visible = 'legendonly'
+
+    return fig
