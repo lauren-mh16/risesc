@@ -70,8 +70,8 @@ if tract_id:
     if not rows.empty:
         r = rows.iloc[0]
         st.metric(t("Population Below Poverty Level"), f"{r['Population Below Poverty Level']}")
-        st.metric(t("Smoking Prevalence"), f"{r['Smoking Prevalence']}")
-        st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']}")
-        st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']}")
+        st.metric(t("Smoking Prevalence"), f"{r['Smoking Prevalence']}%")
+        st.metric(t("Obesity Prevalence"), f"{r['Obesity Prevalence']}%")
+        st.metric(t("Lack of Health Care Access Prevalence"), f"{r['Lack of Health Care Access Prevalence']}%")
     else:
         st.error(t("No demographics information found"))
