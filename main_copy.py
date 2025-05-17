@@ -43,7 +43,7 @@ tab1, tab2 = st.tabs([t("PM2.5 Monitors & Asthma Prevalence Map"), t("Air Qualit
 with tab1:
     st.title(t("PM2.5 Monitors & Asthma Prevalence Map"))
 
-    st.markdown("### Welcome to Rise South City's air pollution dashboard.")
+    st.markdown(t("### Welcome to Rise South City's air pollution dashboard."))
     st.markdown(t(
     "This interactive map shows average **PM2.5 air quality readings** from monitors across San Bruno and South San Francisco in 2024 (Oct-Dec) and 2025 (Jan-Mar), overlaid with asthma prevalence rates at the census tract level. "
     "\n\nUse the layer toggles to view different types of monitoring sites (schools, homes, parks, offices) and explore how air pollution intersects with asthma rates in different census tracts. "
