@@ -179,25 +179,31 @@ def create_folium_map(df_merged):
     ).add_to(m)
 
     # Add legend with dark mode-safe colors
+    # Add updated legend for PM2.5 (2025) with finer color scale and dark mode-safe formatting
     legend_html = """
     <div style="position: fixed;
-         bottom: 40px; left: 40px; width: 200px; height: auto;
+         bottom: 40px; left: 40px; width: 220px; height: auto;
          border:1px solid grey; z-index:9999; font-size:12px;
-         background-color: white; padding: 8px; color: black;">
+         background-color: white; padding: 10px; color: black;">
     <b>Legend</b><br><br>
     <b>PM2.5 (2025) Color:</b><br>
-    <span style="color:green; font-size:14px;">■</span> Low (&lt;6 µg/m³)<br>
-    <span style="color:orange; font-size:14px;">■</span> Moderate (6–9 µg/m³)<br>
-    <span style="color:red; font-size:14px;">■</span> High (&gt;9 µg/m³)<br><br>
+    <span style="color:#006400; font-size:14px;">■</span> 0–3 µg/m³ (Very Low)<br>
+    <span style="color:#228B22; font-size:14px;">■</span> 3–6 µg/m³ (Low)<br>
+    <span style="color:#ADFF2F; font-size:14px;">■</span> 6–9 µg/m³ (Moderate)<br>
+    <span style="color:#FFD700; font-size:14px;">■</span> 9–12 µg/m³ (Elevated)<br>
+    <span style="color:#FF8C00; font-size:14px;">■</span> 12–15 µg/m³ (Unhealthy for Sensitive Groups)<br>
+    <span style="color:#FF0000; font-size:14px;">■</span> 15+ µg/m³ (Unhealthy)<br><br>
     <b>Site Type Icons:</b><br>
-    <span style="font-size:14px; color: black;">🎓 School</span><br>
-    <span style="font-size:14px; color: black;">🏠 Home</span><br>
-    <span style="font-size:14px; color: black;">🍃 Park / Playlot</span><br>
-    <span style="font-size:14px; color: black;">🏢 Office</span><br>
-    <span style="font-size:14px; color: black;">📍 Other</span>
+    <span style="font-size:14px;">🎓 School</span><br>
+    <span style="font-size:14px;">🏠 Home</span><br>
+    <span style="font-size:14px;">🍃 Park / Playlot</span><br>
+    <span style="font-size:14px;">🏢 Office</span><br>
+    <span style="font-size:14px;">📍 Other</span>
     </div>
     """
+    
     m.get_root().html.add_child(folium.Element(legend_html))
+
 
     # ✅ Add LayerControl LAST
     folium.LayerControl().add_to(m)
