@@ -36,7 +36,9 @@ with st.expander(t("PM2.5 and Asthma"), expanded=True):
     st.caption(
         t("Sources: San Mateo County Health Asthma Reporting (2022), U.S. Census Demographics Reporting (2020)"))
     st.markdown("---")
-
+    
+    st.markdown(t("1. Select a date range (be sure to select both a 'from' date and 'to' date!)"))
+    st.markdown(t("2. If desired, select air monitor names to see individual trends. Deselect the name to remove the corresponding trendline.)"))
     fig6 = day_graph(df_hourly)
     st.plotly_chart(fig6, use_container_width=True)
     st.caption(
