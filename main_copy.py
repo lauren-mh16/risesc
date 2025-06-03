@@ -48,7 +48,7 @@ with tab1:
     "This interactive map shows average **PM2.5 air quality readings** from monitors across San Bruno and South San Francisco in 2024 (Oct-Dec) and 2025 (Jan-Mar), overlaid with asthma prevalence rates at the census tract level. "
     "\n\nUse the layer toggles to view different types of monitoring sites (schools, homes, parks, offices) and explore how air pollution intersects with asthma rates in different census tracts. "
     "\n\nThe **colored markers** represent PM2.5 pollution levels for 2025: green (low), orange (moderate), and red (high). Census tract outlines and asthma prevalence choropleths provide additional insight into how air quality may affect local residents’ health. "
-    "\n\nYou can also search for specific census tracts using their GEOID to quickly navigate the map."
+    "\n\nYou can also search for specific census tracts using their GEOID to quickly navigate the map. To translate your address into a census tract GEOID, you can use the US Census Bureau's Geocoder website: https://geocoding.geo.census.gov/geocoder/"
     "\n\n**Note:** Data source descriptions and methodology details are available on a separate page. Please review the datasets to understand how the data was collected, key assumptions, and limitations."
     ))
 
